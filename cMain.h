@@ -29,6 +29,8 @@ public:
 	void OnSaveAs(wxCommandEvent& evt);
 	void OnOpen(wxCommandEvent& evt);
 
+	void SetControlDisplayValues(wxCommandEvent& evt);
+
 public:	
 	wxRichTextCtrl* m_txt1 = nullptr;
 
@@ -51,6 +53,7 @@ private:
 
 enum {
 	ID_Hello = 1,
-	ID_SELECT_SIZE = 2
+	ID_SELECT_SIZE = 2,
+	ID_RT = 3
 };
 

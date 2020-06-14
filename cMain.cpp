@@ -22,11 +22,12 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame)
 	EVT_CHOICE(wxID_SELECT_FONT, OnFontChange)
 	EVT_CHOICE(ID_SELECT_SIZE, OnSizeChange)
 	EVT_CHOICE(wxID_SELECT_COLOR, OnColourChange)
+	EVT_TEXT(ID_RT, SetControlDisplayValues)
 wxEND_EVENT_TABLE()
 
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "SPJ's Text Editor", wxPoint(30, 30), wxSize(1000, 800)) {
 
-	m_txt1 = new wxRichTextCtrl(this, wxID_ANY, "", wxPoint(220, 10), wxSize(800, 600), wxTE_MULTILINE | wxTE_LEFT | wxTE_RICH2);
+	m_txt1 = new wxRichTextCtrl(this, ID_RT, "", wxPoint(220, 10), wxSize(800, 600), wxTE_MULTILINE | wxTE_LEFT | wxTE_RICH2);
 
 	for (int i = 0; i < 2; i++) toolBarButtons[i] = nullptr;
 
@@ -271,49 +272,49 @@ void cMain::OnColourChange(wxCommandEvent& evt)
 	switch (choice) {
 	case 1:
 	{
-		wxFont newFont(2, newDefault.GetFontFamily(), newDefault.GetFontStyle(),
+		wxFont newFont(newDefault.GetFontSize(), newDefault.GetFontFamily(), newDefault.GetFontStyle(),
 			newDefault.GetFontWeight(), newDefault.GetFontUnderlined(), newDefault.GetFontFaceName());
 		newDefault.SetTextColour(*wxBLACK);
 		break;
 	}
 	case 2:
 	{
-		wxFont newFont(4, newDefault.GetFontFamily(), newDefault.GetFontStyle(),
+		wxFont newFont(newDefault.GetFontSize(), newDefault.GetFontFamily(), newDefault.GetFontStyle(),
 			newDefault.GetFontWeight(), newDefault.GetFontUnderlined(), newDefault.GetFontFaceName());
 		newDefault.SetTextColour(*wxBLUE);
 		break;
 	}
 	case 3:
 	{
-		wxFont newFont(8, newDefault.GetFontFamily(), newDefault.GetFontStyle(),
+		wxFont newFont(newDefault.GetFontSize(), newDefault.GetFontFamily(), newDefault.GetFontStyle(),
 			newDefault.GetFontWeight(), newDefault.GetFontUnderlined(), newDefault.GetFontFaceName());
 		newDefault.SetTextColour(*wxCYAN);
 		break;
 	}
 	case 4:
 	{
-		wxFont newFont(16, newDefault.GetFontFamily(), newDefault.GetFontStyle(),
+		wxFont newFont(newDefault.GetFontSize(), newDefault.GetFontFamily(), newDefault.GetFontStyle(),
 			newDefault.GetFontWeight(), newDefault.GetFontUnderlined(), newDefault.GetFontFaceName());
 		newDefault.SetTextColour(*wxGREEN);
 		break;
 	}
 	case 5:
 	{
-		wxFont newFont(32, newDefault.GetFontFamily(), newDefault.GetFontStyle(),
+		wxFont newFont(newDefault.GetFontSize(), newDefault.GetFontFamily(), newDefault.GetFontStyle(),
 			newDefault.GetFontWeight(), newDefault.GetFontUnderlined(), newDefault.GetFontFaceName());
 		newDefault.SetTextColour(*wxYELLOW);
 		break;
 	}
 	case 6:
 	{
-		wxFont newFont(48, newDefault.GetFontFamily(), newDefault.GetFontStyle(),
+		wxFont newFont(newDefault.GetFontSize(), newDefault.GetFontFamily(), newDefault.GetFontStyle(),
 			newDefault.GetFontWeight(), newDefault.GetFontUnderlined(), newDefault.GetFontFaceName());
 		newDefault.SetTextColour(*wxLIGHT_GREY);
 		break;
 	}
 	case 7:
 	{
-		wxFont newFont(64, newDefault.GetFontFamily(), newDefault.GetFontStyle(),
+		wxFont newFont(newDefault.GetFontSize(), newDefault.GetFontFamily(), newDefault.GetFontStyle(),
 			newDefault.GetFontWeight(), newDefault.GetFontUnderlined(), newDefault.GetFontFaceName());
 		newDefault.SetTextColour(*wxRED);
 		break;
@@ -357,6 +358,39 @@ void cMain::OnOpen(wxCommandEvent& evt)
 
 	filename = dlg.GetFilename();
 	m_txt1->LoadFile(filename, wxRICHTEXT_TYPE_XML);
+
+}
+
+void cMain::SetControlDisplayValues(wxCommandEvent& evt)
+{
+	m_txt1->SetFocus();
+	
+	wxRichTextAttr currentStyle;
+	m_txt1->GetStyle(m_txt1->GetInsertionPoint() - 1, currentStyle);
+	
+	if (currentStyle.GetFontFaceName() == "Arial") fontChoice->SetSelection(1);
+	else if (currentStyle.GetFontFaceName() == "Garamond") fontChoice->SetSelection(2);
+	else if (currentStyle.GetFontFaceName() == "Times New Roman") fontChoice->SetSelection(3);
+	else if (currentStyle.GetFontFaceName() == "Coronet") fontChoice->SetSelection(4);
+	else if (currentStyle.GetFontFaceName() == "Helvetica") fontChoice->SetSelection(5);
+	else if (currentStyle.GetFontFaceName() == "Courier") fontChoice->SetSelection(6);
+	else if (currentStyle.GetFontFaceName() == "Consolas") fontChoice->SetSelection(7);
+
+	if (currentStyle.GetFontSize() == 2) fontSize->SetSelection(1);
+	else if (currentStyle.GetFontSize() == 4) fontSize->SetSelection(2);
+	else if (currentStyle.GetFontSize() == 8) fontSize->SetSelection(3);
+	else if (currentStyle.GetFontSize() == 16) fontSize->SetSelection(4);
+	else if (currentStyle.GetFontSize() == 32) fontSize->SetSelection(5);
+	else if (currentStyle.GetFontSize() == 48) fontSize->SetSelection(6);
+	else if (currentStyle.GetFontSize() == 64) fontSize->SetSelection(7);
+
+	if (currentStyle.GetTextColour() == *wxBLACK) colourChoice->SetSelection(1);
+	else if (currentStyle.GetTextColour() == *wxBLUE) colourChoice->SetSelection(2);
+	else if (currentStyle.GetTextColour() == *wxCYAN) colourChoice->SetSelection(3);
+	else if (currentStyle.GetTextColour() == *wxGREEN) colourChoice->SetSelection(4);
+	else if (currentStyle.GetTextColour() == *wxYELLOW) colourChoice->SetSelection(5);
+	else if (currentStyle.GetTextColour() == *wxLIGHT_GREY) colourChoice->SetSelection(6);
+	else if (currentStyle.GetTextColour() == *wxRED) colourChoice->SetSelection(7);
 
 }
 
